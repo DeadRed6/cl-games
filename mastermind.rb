@@ -8,11 +8,11 @@ class Mastermind
 
 	def start
 		while true
-			make_guess
+			player_make_guess
 		end
 	end
 
-	def make_guess
+	def player_make_guess
 		puts "\nYou have #{@guesses_remaining} guesses left."
 		puts "Colours available: #{@colours.join(" ")}"
 		puts "Make your choice in the format (1234) using the letters."
@@ -21,7 +21,7 @@ class Mastermind
 			puts "Invalid choice, please try again."
 			player_guess = gets.chomp
 		end
-		puts "\nComputer response: #{master_response(player_guess.split(""))}"
+		puts "\nComputer response: #{cpu_master_response(player_guess.split(""))}"
 		@guesses_remaining -= 1
 		exit if(@guesses_remaining == 0 || @game_over)
 	end
@@ -33,17 +33,18 @@ class Mastermind
 		end
 	end
 
-	def master_response(g) #receives an array
+	def cpu_master_response(g) #receives an array
 		return player_wins if @code == g
-		result = []
+		correct_colour = 0
+		correct_position = 0
 		for i in 0..3 do
    			if g[i] == @code[i]
-				result << "B"
+				correct_position += 1
 			else
-				result.push(@code.include?(g[i]) ? "W" : "-")
+				correct_colour += 1
 			end
 		end
-		return result.join("")
+		return "#{correct_position} exact. #{correct_colour} partial."
 	end
 
 	def player_wins
