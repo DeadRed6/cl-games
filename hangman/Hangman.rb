@@ -1,14 +1,38 @@
 require_relative 'hangman_methods.rb'
-
+require_relative 'savefile.rb'
+#TODO: Add option to save to a file every turn.
 class Hangman
 	include HangmanMethods
-	
+	include SaveFile
+
 	def initialize()
+		puts "Before we start, do you want to load a save file? (y/n)"
+		response = gets.chomp
+		if response == "y"
+			filename = choose_save # returns false if no saves.
+		end
+
+		if filename
+			set_game_variables_from_file(filename)
+		else
+			set_new_game_variables	
+		end
+	end
+
+	def set_new_game_variables
 		@secret_word = pick_word
-		@lives_left = 5
-		@attempt = []
-		@secret_word.length.times {@attempt << "_"}
-		@letters_used = []
+                @lives_left = 5
+                @attempt = []
+                @secret_word.length.times {@attempt << "_"}
+                @letters_used = []
+	end
+
+	def set_game_variables_from_file(filename)
+		saved_game = JSON.parse(File.read("saved-games/#{filename}"))
+  		@secret_word = saved_game['secret_word']
+		@lives_left = saved_game['lives_left']
+		@attempt = saved_game['attempt']
+		@letters_used = saved_game['letters_used']
 	end
 
 	def play_turn
