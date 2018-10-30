@@ -2,7 +2,7 @@ module HangmanMethods
 	#Selects a random word lowercase between 5 and 12 letters long.
 	def pick_word
 		words = File.read("words.txt")
-		words.split("\n").select { |w| w.length > 4 && w.length < 13}.sample.chomp.downcase
+		words.split("\n").select { |w| w.length > 5 && w.length < 14}.sample.chomp.downcase
 	end
 	
 	#Returns an array of all the indexes where the letter matches.
@@ -17,7 +17,9 @@ module HangmanMethods
 	end
 
 	def correct_input?(input, letters_used) #returns true if the input is a letter
-        	begin
+        	return "Save" if input == "SAVE" 
+		
+		begin
 			l = input.to_s.downcase[0]
 			return l =~ /[a-z]/ && !letters_used.include?(l)
 		rescue

@@ -29,10 +29,10 @@ class Hangman
 
 	def set_game_variables_from_file(filename)
 		saved_game = JSON.parse(File.read("saved-games/#{filename}"))
-  		@secret_word = saved_game['secret_word']
-		@lives_left = saved_game['lives_left']
-		@attempt = saved_game['attempt']
-		@letters_used = saved_game['letters_used']
+  		@secret_word = saved_game['@secret_word']
+		@lives_left = saved_game['@lives_left']
+		@attempt = saved_game['@attempt']
+		@letters_used = saved_game['@letters_used']
 	end
 
 	def play_turn
@@ -41,11 +41,17 @@ class Hangman
 		puts "Letters used: #{@letters_used}"
 		
 		loop do
-			print "\nEnter your letter. Will repeat until valid. "
+			print "\nEnter your letter or type SAVE. Will repeat until valid. "
 			@letter_guess = gets.chomp
 			break if correct_input?(@letter_guess, @letters_used)
 		end
-		
+		if correct_input?(@letter_guess, @letters_used) == "Save"
+			puts "What is your name?"
+			uname = gets.chomp.split.join("").downcase
+			create_new_save(uname, self.to_json)
+			puts "Game saved."
+			exit
+		end	
 		response = check_guess(@letter_guess, @secret_word)
 		if response == []
 			puts "\n\n\nIncorrect! You lose a life."

@@ -20,9 +20,9 @@ module SaveFile
 
 	def choose_save
 		files = Dir.entries("saved-games/")
-		if files != [] && files.length != 2
+		if files.length != 2
 			puts "Select the number of the file you want to load: "
-			files[2..files.length].each_with_index do |fn, idx|
+			files[0...-2].each_with_index do |fn, idx|
 				puts "#{idx}: #{fn}"
 			end
 			response = gets.chomp[0].to_i
